@@ -1,0 +1,5 @@
+---- Note-ton-STA Source code ----
+
+This is the code for my PHP course mini-project. It is placed under GPL, refer to gpl.txt for precisions.
+
+To install it, you need to create a database on your RDBMS and fill it with the tables described in db.sql, and to set the credentials in application/config/config.sample.php, and then rename that file as config.php.
