@@ -37,7 +37,8 @@ function pip()
 	} else {
 		$path = APP_DIR . 'controllers/' . $config['default_controller_file'];
 		require_once($path);
-		
+		if($controller == $config['default_controller'])
+			$controller = $action;
 		if(method_exists($config['default_controller'], $controller)){
 			$params = explode('/', array_pop($segments));
 			if(count($segments) >= 2)

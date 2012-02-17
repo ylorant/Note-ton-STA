@@ -1,16 +1,18 @@
 body
 {
+/*
 	padding:0px;
 	margin:0px;
+*/
 	height:100%;
 	background:url('../images/content_background.png');
 }
 
-.topbar
+h1
 {
-	background:url('../images/topbar-bkgd.png') repeat-x;
-	width:100%;
-	height:40px;
+	font-size:350%;
+	margin:0px;
+	margin-left:20px;
 }
 
 .header
@@ -20,8 +22,15 @@ body
 	width:100%;
 	background:url('../images/background-large.png') no-repeat top center;
 	border-bottom:3px solid #9d9160;
-	
+	box-shadow:0px -10px 10px 10px #666;
 	z-index:2;
+}
+
+.header-content
+{
+	position:relative;
+	width:1280px;
+	margin:auto;
 }
 
 .header img
@@ -33,10 +42,10 @@ body
 
 .header .region-select
 {
-	float:right;
-	position:relative;
+	
+	position:absolute;
 	top:16px;
-	right:650px;
+	left:640px;
 }
 
 .region-select img
@@ -70,7 +79,7 @@ body
 .region-select .region-content form
 {
 	position:absolute;
-	top:140px;
+	top:145px;
 	left:95px;
 	font-size:1.5em;
 	font-family: Celestia, sans-serif;
@@ -81,11 +90,12 @@ body
 {
 	
 	background:url('../images/content_background.png');
+/*
 	position:absolute;
+*/
 	top:306px;
-	left:0px;
-	width:100%;
-	box-shadow:inset 0px 10px 10px -10px #666;
+	margin:auto;
+	width:1024px;
 }
 
 .content-text
@@ -97,14 +107,45 @@ body
 	margin-left:15px;
 	margin-bottom:15px;
 	margin-right:15px;
-	padding:15px;
+	padding:15px 25px;
 	color:#56524B;
 	box-shadow:0px 0px 5px #ccc;
 }
 
 select
 {
-	font-size:1em;
+	font-size:.8em;
+	height:2em;
 	font-family: PM-Sans, serif;
 	width:250px;
+}
+
+.leftpanel
+{
+	float:left;
+	width:50%;
+	margin-left:-10px;
+	border-right:1px solid #ddd;
+	text-align:center;
+}
+
+.rightpanel
+{
+	float:right;
+	width:50%;
+	margin-right:9px;
+	text-align:center;
+}
+
+.separator
+{
+	background-color:#ddd;
+	width:1px;
+	height:100px;
+	float:left;
+}
+
+.clear
+{
+	clear:both;
 }

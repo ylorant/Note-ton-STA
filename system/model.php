@@ -21,6 +21,26 @@ class Model {
 		
 	}
 	
+	public function to_bool($val)
+	{
+	    return !!$val;
+	}
+	
+	public function to_date($val)
+	{
+	    return date('Y-m-d', $val);
+	}
+	
+	public function to_time($val)
+	{
+	    return date('H:i:s', $val);
+	}
+	
+	public function to_datetime($val)
+	{
+	    return date('Y-m-d H:i:s', $val);
+	}
+	
 	public function prepare($query)
 	{
 		$this->_query = $this->_PDO->prepare($query);

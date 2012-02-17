@@ -24,6 +24,11 @@ class Campus extends Model
 		return $this->$var;
 	}
 	
+	public function __toString()
+	{
+		return $this->name;
+	}
+	
 	public function load($id)
 	{
 		$this->prepare('SELECT id, name FROM campuses WHERE id = ?');
@@ -48,5 +53,14 @@ class Campus extends Model
 		
 		return $list;
 	}
-
+	
+	public function getNames()
+	{
+		$list = $this->getList();
+		$names = array();
+		foreach($list as $campus)
+			$names[$campus->id] = $campus->name;
+		
+		return $names;
+	}
 }

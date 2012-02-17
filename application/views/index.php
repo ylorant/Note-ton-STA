@@ -14,20 +14,15 @@
 	<body>
 		
 		<div class="header">
-			<img src="static/images/title.png" id="logo" />
-			
-			<div class="region-select">
-				<img src="static/images/map.png" />
-				<div class="region-content">
-					<h1>Select your campus</h1>
-					<form method="post" action="setregion">
-						
-						<select name="campus">
-							<?php foreach($campusList as $campus): ?>
-								<option value="<?php echo $campus->id; ?>"><?php echo $campus->name; ?></option>
-							<?php endforeach; ?>
-						</select>
-					</form>
+			<div class="header-content">
+				<img src="static/images/title.png" id="logo" />
+				
+				<div class="region-select">
+					<img src="static/images/map.png" />
+					<div class="region-content">
+						<h1>Select your campus</h1>
+						<?php echo $form->generate('post', 'setregion'); ?>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -36,11 +31,15 @@
 				<h1>Welcome to Note ton STA !</h1>
 				<p>
 					This website proposes you to evaluate interventions of SUPINFO speakers.<br />
-					You canalso get statistics by speaker or by campus.
+					You can also get statistics by speaker or by campus.
 				</p>
-				<p>
-					You are a speaker and you do not have an account ? <a class="button cheerilee">Register</a>
+				<p class="leftpanel">
+					You are a speaker and you do not have an account ? <a class="cheerilee bigbutton" href="speaker/register">Register</a>
 				</p>
+				<p class="rightpanel">
+					You are a speaker and you already have an account ? <a class="cheerilee bigbutton" href="speaker/login">Login</a>
+				</p>
+				<p class="clear"></p>
 			</div>
 		</div>
 	</body>

@@ -2,8 +2,8 @@
 namespace Controller;
 use \View\View;
 
-class Controller {
-	
+class Controller
+{
 	public function loadModel($name)
 	{
 		require(APP_DIR .'models/'. strtolower($name) .'.php');
@@ -27,6 +27,7 @@ class Controller {
 	public function loadHelper($name)
 	{
 		require(APP_DIR .'helpers/'. strtolower($name) .'.php');
+		$name = 'Helper\\'.$name;
 		$helper = new $name;
 		return $helper;
 	}
