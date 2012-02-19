@@ -5,6 +5,9 @@ use \DOMDocument;
 class Form
 {
 	private $fields;
+	private $errorData;
+	private $lastData;
+	private $lastError;
 	
 	const VARCHAR = 1;
 	const INTEGER = 2;
@@ -20,11 +23,15 @@ class Form
 	
 	const CHECK_EMAIL = 200;
 	const CHECK_URL = 201;
-	const CHECK_PASSWORDS = 202;
+	const CHECK_PASSWORD = 202;
+	
+	const ERR_EMPTY_FIELD = 300;
+	const ERR_INVALID_FIELD = 301;
 	
 	public function __construct()
 	{
 		$this->fields = array();
+		$this->errorData = array();
 	}
 	
 	public function generate($action, $method = 'POST', $files = FALSE)
@@ -108,15 +115,35 @@ class Form
 				
 				if($field['type'] != Form::SUBMIT && $field['type'] != Form::BOOL)
 				{
+					if(in_array($field['name'], $this->errorData))
+						$el->setAttribute('class', 'invalid');
+					
+					if(isset($this->lastData[$field['name']]))
+						$el->setAttribute('value', $this->lastData[$field['name']]);
+					
+					foreach($field['attributes'] as $attr => $value)
+						$el->setAttribute($attr, $value);
+					
 					if($field['display'])
 					{
 						$text = $document->createElement('label');
 						$text->nodeValue = $field['display'].': ';
 						$form->appendChild($text);
 					}
+					
+					
 				}
 				
 				$form->appendChild($el);
+				
+				if($field['note'])
+				{
+					$note = $document->createElement('span');
+					$note->nodeValue = 'Note: '.$field['note'];
+					$note->setAttribute('class', 'form-note');
+					$form->appendChild($note);
+				}
+				
 				$form->appendChild($document->createElement('br'));
 			}
 		}
@@ -134,10 +161,15 @@ class Form
 		$this->fields[$name]['attributes'][$attributeName] = $value;
 	}
 	
+	public function addNote($field, $text)
+	{
+		$this->fields[$field]['note'] = $text;
+	}
+	
 	public function addField($name, $displayName, $type = Form::VARCHAR, $allowedValues = NULL, $regexMatch = NULL, $defaultValue = NULL)
 	{
 		if(!isset($this->fields[$name]))
-			$this->fields[$name] = array('display' => $displayName, 'type' => $type, 'name' => $name, 'default' => $defaultValue, 'values' => $allowedValues, 'attributes' => array(), 'regex' => $regexMatch);
+			$this->fields[$name] = array('display' => $displayName, 'type' => $type, 'name' => $name, 'default' => $defaultValue, 'values' => $allowedValues, 'attributes' => array(), 'regex' => $regexMatch, 'note' => NULL);
 		else
 			return FALSE;
 		
@@ -154,18 +186,94 @@ class Form
 		return TRUE;
 	}
 	
+	public function getDisplayName($field)
+	{
+		return $this->fields[$field]['display'];
+	}
+	
 	/* Field check :
 	 * 
 	 * Check of $check with fields in $data. Here, $key represent the key of a $data element, $value its value :
 	 * - field $key does not exists, field $value does not exists : the element is skipped.
 	 * - field $key exists, field $value exists : Check similarity between the $key and $value fields
-	 * - field $key exists, fields $value does not exists : checks the value of $key field, and its accordance with $value. Overrides $regexMatch
+	 * - field $key exists, field $value does not exists : checks the value of $key field, and its accordance with $value. Overrides $regexMatch
 	 * 	 set at field declaration.
 	 * - field $key does not exists, field $value exists : checks the value of $value field, in accordance with the $regexMatch parameter set at
 	 * 	 the field's declaration.
 	 */
 	public function check($check, $data, $mandatory = Form::ALL_FIELDS)
 	{
+		$this->errorData = array();
+		$this->lastData = $data;
+		$return = TRUE;
+		//Checking emptiness of the fields
+		if($mandatory == Form::ALL_FIELDS)
+			$mandatory = array_keys($this->fields);
 		
+		foreach($mandatory as $field)
+		{
+			if(empty($data[$field]))
+			{
+				$return = $this->lastError = Form::ERR_EMPTY_FIELD;
+				$this->errorData[] = $field;
+			}
+		}
+		
+		if($return !== TRUE)
+			return $return;
+		
+		//Checking validity of the fields, in accordance with $check array
+		foreach($check as $field => $value)
+		{
+			if(isset($this->fields[$field]) && isset($data[$field]))
+			{
+				if(isset($this->fields[$value]) && isset($data[$value]) && $data[$field] != $data[$value])
+				{
+					$return = $this->lastError = Form::ERR_INVALID_FIELD;
+					$this->errorData[] = $field;
+				}
+				elseif((!isset($this->fields[$value]) || !isset($data[$value])) && !$this->_checkValue($field, $data[$field], $value))
+				{
+					$return = $this->lastError = Form::ERR_INVALID_FIELD;
+					$this->errorData[] = $value;
+				}
+			}
+			elseif(isset($this->fields[$value]) && isset($data[$value]) && !$this->_checkValue($value, $data[$value]))
+			{
+				$return = $this->lastError = Form::ERR_INVALID_FIELD;
+				$this->errorData[] = $value;
+			}
+		}
+		
+		if($return !== TRUE)
+			return $return;
+		
+		return TRUE;
+	}
+	
+	private function _checkValue($field, $data, $regex = NULL)
+	{
+		if($regex != NULL)
+			$check = $regex;
+		else
+			$check = $this->fields[$field]['regex'];
+			
+		switch($check)
+		{
+			case Form::CHECK_EMAIL:
+				return filter_var($data, FILTER_VALIDATE_EMAIL);
+				break;
+			case Form::CHECK_PASSWORD:
+				return strlen($data) >= 5;
+				break;
+			case Form::CHECK_URL:
+				return filter_var($data, FILTER_VALIDATE_URL);
+				break;
+			default:
+				if(!empty($check))
+					return preg_match($check, $data);
+				else
+					return TRUE;
+		}
 	}
 }

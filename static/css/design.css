@@ -77,6 +77,21 @@ a
 .header-content a
 {
 	color:#6E396C;
+	transition: color 0.35s;
+	-moz-transition:color 0.35s; /* Firefox 4 */
+	-webkit-transition:color 0.35s; /* Safari and Chrome */
+	-o-transition:color 0.35s; /* Opera */
+	transition:color 350ms;
+}
+
+.header-content a:visited
+{
+	color:#6E396C;
+	transition: color 0.35s;
+	-moz-transition:color 0.35s; /* Firefox 4 */
+	-webkit-transition:color 0.35s; /* Safari and Chrome */
+	-o-transition:color 0.35s; /* Opera */
+	transition:color 350ms;
 }
 
 .header-content a:hover

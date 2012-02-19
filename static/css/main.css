@@ -51,11 +51,20 @@ select
 	background:-moz-linear-gradient(top, #ECECEC,#D2D2D2);
 }
 
+.invalid
+{
+	border:1px solid #d44 !important;
+	box-shadow:inset 0px 1px 1px #f99 !important;
+	background-color:#fee !important;
+}
+
 input[type="text"], input[type="password"], input[type="file"]
 {
 	height:1.5em;
 	border:1px solid #ddd;
 	border-radius:3px;
+	background:#fff;
+	margin-right:5px;
 	box-shadow:inset 0px 1px 1px #eee;
 }
 
@@ -71,4 +80,10 @@ label
 a
 {
 	border:0px;
+}
+
+.form-note
+{
+	font-style:italic;
+	font-size:0.9em;
 }

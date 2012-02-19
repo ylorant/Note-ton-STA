@@ -40,6 +40,8 @@ class Campus extends Model
 		
 		$this->id = $data['id'];
 		$this->name = $data['name'];
+		
+		return TRUE;
 	}
 	
 	public function getList()

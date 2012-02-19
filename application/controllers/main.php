@@ -9,7 +9,7 @@ class Main extends Controller
 	{
 		$campus = $this->loadModel('Campus');
 		$form = $this->loadHelper('Form');
-		$form->addField('campus', NULL, Form::ENUM_SELECT, $campus->getNames());
+		$form->addField('campus', NULL, Form::ENUM_SELECT, array_merge(array('-- Campus --'), $campus->getNames()));
 		$form->addAttribute('campus', 'onchange', 'this.form.submit();');
 		$list = $campus->getList();
 		
