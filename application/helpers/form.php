@@ -18,12 +18,14 @@ class Form
 	const BUTTON = 7;
 	const SUBMIT = 8;
 	const BOOL = 9;
+	const EMAIL = 10;
 	
 	const ALL_FIELDS = 100;
 	
 	const CHECK_EMAIL = 200;
 	const CHECK_URL = 201;
 	const CHECK_PASSWORD = 202;
+	const CHECK_INTEGER = 203;
 	
 	const ERR_EMPTY_FIELD = 300;
 	const ERR_INVALID_FIELD = 301;
@@ -97,6 +99,7 @@ class Form
 				case Form::VARCHAR:
 				case Form::INTEGER:
 				case Form::PASSWORD:
+				case Form::EMAIL;
 				default:
 					$el = $document->createElement('input');
 					
@@ -168,6 +171,22 @@ class Form
 	
 	public function addField($name, $displayName, $type = Form::VARCHAR, $allowedValues = NULL, $regexMatch = NULL, $defaultValue = NULL)
 	{
+		if($regexMatch === NULL)
+		{ 
+			switch($type)
+			{
+				case Form::EMAIL:
+					$regexMatch = Form::CHECK_EMAIL;
+					break;
+				case Form::PASSWORD:
+					$regexMatch = Form::CHECK_PASSWORD;
+					break;
+				case Form::INTEGER:
+					$regexMatch = Form::CHECK_INTEGER;
+					break;
+			}
+		}
+		
 		if(!isset($this->fields[$name]))
 			$this->fields[$name] = array('display' => $displayName, 'type' => $type, 'name' => $name, 'default' => $defaultValue, 'values' => $allowedValues, 'attributes' => array(), 'regex' => $regexMatch, 'note' => NULL);
 		else
@@ -249,6 +268,33 @@ class Form
 			return $return;
 		
 		return TRUE;
+	}
+	
+	public function sanitize($data)
+	{
+		foreach($data as $key => &$value)
+		{
+			if(isset($this->fields[$key]))
+			{
+				switch($this->fields[$key]['type'])
+				{
+					case Form::INTEGER:
+						$value = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
+						break;
+					case Form::EMAIL:
+						$value = filter_var($value, FILTER_SANITIZE_EMAIL);
+						break;
+					case Form::BOOL:
+						$value = !!$value;
+						break;
+					default:
+						$value = filter_var($value, FILTER_SANITIZE_STRING);
+						break;
+				}
+			}
+		}
+		
+		return $data;
 	}
 	
 	private function _checkValue($field, $data, $regex = NULL)

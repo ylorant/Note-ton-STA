@@ -4,32 +4,81 @@ use Helper\Form;
 
 class Speaker extends Controller
 {
+	private $session;
+	private $speaker;
+	
+	public function __construct()
+	{
+		$this->speaker = $this->loadModel('Speaker');
+		$this->session = $this->loadHelper('Session');
+		
+		if($this->session->logged)
+			$this->speaker->restore($this->session->speaker);
+	}
+	
+	public function __destruct()
+	{
+		if($this->session->logged)
+			$this->session->speaker = $this->speaker->save();
+	}
+	
+	private function checkLogin()
+	{
+		if(!$this->session->logged)
+		{
+			header('Location:login');
+			exit();
+		}
+	}
+	
+	//~ public function index()
+	//~ {
+		//~ $this->checkLogin();
+		//~ 
+		//~ $view = $this->loadView('speaker_index');
+		//~ $view->set('speaker', $this->speaker);
+		//~ $view->set('logged', $this->session->logged);
+		//~ $view->render();
+	//~ }
+	
 	//Login
 	public function login()
 	{
-		if(!isset($_POST['login']))
+		$view = $this->loadView('login');
+		$form = $this->loadHelper('Form');
+		
+		$form->addField('email', 'E-mail');
+		$form->addField('password', 'Password', Form::PASSWORD);
+		$form->addField('submit', 'Submit', Form::SUBMIT);
+		
+		$view->set('form', $form);
+		
+		if(isset($_POST['submit']))
 		{
-			$_SESSION['message'] = array('error', 'Unknown error.');
-			header('Location:index');
-			exit();
+			if($form->check($check, $_POST))
+			{
+				$data = $form->sanitize($_POST);
+				if($this->speaker->authenticate($data['email'], $data['password']))
+				{
+					$this->session->logged = TRUE;
+					$this->speaker->load($_POST['email']);
+					header('Location:../intervention/mine');
+					return;
+				}
+				else
+					$view->set('error', TRUE);
+			}
 		}
 		
-		$model = $this->loadModel('Users_model');
-		$check = $model->checkUser($_POST['login'], $_POST['password']);
-		
-		if($check === FALSE)
-			$_SESSION['message'] = array('error', 'Invalid login.');
-		else
-			$_SESSION = array_merge($_SESSION, $check);
-		
-		header('Location:index');
+		$view->set('logged', FALSE);
+		$view->render();
 	}
 	
 	//Logout
 	public function logout()
 	{
-		session_destroy();
-		header('Location:index');
+		$this->session->logged = FALSE;
+		header('Location:../index');
 	}
 	
 	//Registering
@@ -38,7 +87,7 @@ class Speaker extends Controller
 		$form = $this->loadHelper('Form');
 		$form->addField('first_name', 'First Name');
 		$form->addField('last_name', 'Last Name');
-		$form->addField('email', 'E-mail', Form::VARCHAR, NULL, Form::CHECK_EMAIL);
+		$form->addField('email', 'E-mail', Form::EMAIL, NULL, Form::CHECK_EMAIL);
 		$form->addField('password', 'Password', Form::PASSWORD, NULL, Form::CHECK_PASSWORD);
 		$form->addField('password_confirmation', 'Password confirmation', Form::PASSWORD);
 		$form->addField('submit', 'Submit', Form::SUBMIT);
@@ -47,30 +96,18 @@ class Speaker extends Controller
 		
 		if(isset($_POST['submit']) && $form->check($check, $_POST) === TRUE)
 		{
-			$model = $this->loadModel('Speaker');
-		
-			if(empty($_POST['login']) || empty($_POST['password']))
-				$_SESSION['message'] = array('error', 'Fields are missing.');
-			else if($model->userExists($_POST['login']))
-				$_SESSION['message'] = array('error', 'Username already taken.');
-			else if($_POST['password'] != $_POST['passwordcheck'])
-				$_SESSION['message'] = array('error', 'Passwords are not the same.');
-			else
-			{
-				$user = $model->createUser($_POST['login'],$_POST['password']);
-				$_SESSION['message'] = array('confirm', 'Welcome, '.$user['login'].' !');
-				$_SESSION['login'] = $user['login'];
-				$_SESSION['password'] = $user['password'];
-				$_SESSION['id'] = $user['id'];
-			}
-			header('Location:index');
+			$data = $form->sanitize($_POST);
+			
+			$this->speaker->create($data['first_name'], $data['last_name'], $data['email'], $data['password']);
+			$this->session->logged = TRUE;
+			
+			header('Location:../intervention/mine');
+			return;
 		}
 		
 		$view = $this->loadView('register');
+		$view->set('logged', FALSE);
 		$view->set('form', $form);
 		$view->render();
-		exit();
-		
-		
 	}
 }

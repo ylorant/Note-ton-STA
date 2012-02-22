@@ -40,10 +40,17 @@
 			<div class="header-content">
 				<a href="index"><img src="static/images/title-small.png" /></a>
 				<ul>
-					<li><a href="speaker/register">Register</a></li>
-					<li><a href="speaker/login">Login</a></li>
+					<?php if($logged): ?>
+						<li><a href="intervention/mine">My interventions</a></li>
+						<li><a href="intervention/new">New intervention</a></li>
+						<li><a href="speaker/logout">Logout</a></li>
+					<?php else: ?>
+						<li><a href="speaker/register">Register</a></li>
+						<li><a href="speaker/login">Login</a></li>
+					<?php endif; ?>
 				</ul>
 			</div>
 		</div>
 		<div class="content">
-			
+			<img class="watermark" src="static/images/watermark.png" />
+			<div class="content-view">

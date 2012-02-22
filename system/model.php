@@ -10,9 +10,7 @@ class Model {
 	
 	public function __construct()
 	{
-		$this->_PDO = new PDO(DB_ENGINE.':host='.DB_HOST.';port='.DB_PORT.';dbname='.DB_DBNAME, DB_USER, DB_PW);
-		$this->_PDO->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-		$this->_PDO->exec('SET NAMES utf8');
+		$this->_PDO = DatabaseHandler::get();
 		call_user_func_array(array($this, '__init'), func_get_args());
 	}
 	
@@ -93,4 +91,21 @@ class Model {
 	}
     
 }
+
+class DatabaseHandler
+{
+	private static $_pdo;
+	public static function get()
+	{
+		if(self::$_pdo === NULL)
+		{
+			self::$_pdo = new PDO(DB_ENGINE.':host='.DB_HOST.';port='.DB_PORT.';dbname='.DB_DBNAME, DB_USER, DB_PW);
+			self::$_pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+			self::$_pdo->exec('SET NAMES utf8');
+		}
+		
+		return self::$_pdo;
+	}
+}
+
 ?>

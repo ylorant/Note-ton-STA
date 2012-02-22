@@ -102,6 +102,7 @@ a
 
 .content
 {
+	position:relative;
 	width:1024px;
 	border:1px solid #D1C6AB;
 	background-color:#fff;
@@ -123,4 +124,17 @@ input[type="text"], input[type="password"], input[type="file"], select
 input[type="submit"]
 {
 	margin-top:1em;
+}
+
+.watermark
+{
+	position:absolute;
+	bottom:10px;
+	right:10px;
+}
+
+.content-view
+{
+	position:relative;
+	z-index:2;
 }

@@ -1,16 +1,19 @@
 <?php
 namespace Helper;
 
-class Session {
-
-	function set($key, $val)
+class Session
+{
+	function __set($key, $val)
 	{
-		$_SESSION["$key"] = $val;
+		$_SESSION[$key] = $val;
 	}
 	
-	function get($key)
+	function __get($key)
 	{
-		return $_SESSION["$key"];
+		if(isset($_SESSION[$key]))
+			return $_SESSION[$key];
+		
+		return NULL;
 	}
 	
 	function destroy()

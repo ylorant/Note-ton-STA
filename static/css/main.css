@@ -80,10 +80,71 @@ label
 a
 {
 	border:0px;
+	color:#B82BC3;
+}
+
+a:hover
+{
+	font-style:italic;
 }
 
 .form-note
 {
 	font-style:italic;
 	font-size:0.9em;
+	margin-left:1em;
+}
+
+p.form-note
+{
+	margin-left:150px;
+}
+
+div.error
+{
+	color:#c00;
+}
+
+table
+{
+	border-collapse:collapse;
+	width:100%;
+}
+
+td, th
+{
+	border-bottom:1px solid #DBD4C1;
+	border-top:1px solid #F7F1DF;
+	padding:10px;
+}
+
+tr:nth-child(even)
+{
+	background-color:#EEE8D9;
+}
+
+tr:nth-child(odd)
+{
+	background-color:#F2EDE2;
+}
+
+th
+{
+	text-align:left;
+	font-size:110%;
+	font-weight:normal;
+	color:white;
+	background-color:#654F36;
+	text-shadow: 0px -1px 0px black;
+}
+
+td a
+{
+	color: #56524B;
+}
+
+.disabled
+{
+	color:#888;
+	text-align:center;
 }

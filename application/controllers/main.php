@@ -11,8 +11,6 @@ class Main extends Controller
 		$form = $this->loadHelper('Form');
 		$form->addField('campus', NULL, Form::ENUM_SELECT, array_merge(array('-- Campus --'), $campus->getNames()));
 		$form->addAttribute('campus', 'onchange', 'this.form.submit();');
-		$list = $campus->getList();
-		
 		
 		$template = $this->loadView('index');
 		//~ $template->set('campusList', $);
