@@ -21,7 +21,7 @@
 					<img src="static/images/map.png" />
 					<div class="region-content">
 						<h1>Select your campus</h1>
-						<?php echo $form->generate('setregion'); ?>
+						<?php echo $form->generate('campus'); ?>
 					</div>
 				</div>
 			</div>

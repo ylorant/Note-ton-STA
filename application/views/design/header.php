@@ -32,6 +32,8 @@
 		<link rel="stylesheet" type="text/css" media="screen" href="static/css/buttons.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="static/css/main.css" />
 		<link rel="stylesheet" type="text/css" media="screen" href="static/css/design.css" />
+		<link rel="stylesheet" type="text/css" media="all" href="static/css/jsDatePick_ltr.min.css" />
+		<script type="text/javascript" src="static/js/jsDatePick.min.1.3.js"></script>
 		<meta name="generator" content="Geany 0.21" />
 	</head>
 
@@ -42,7 +44,7 @@
 				<ul>
 					<?php if($logged): ?>
 						<li><a href="intervention/mine">My interventions</a></li>
-						<li><a href="intervention/new">New intervention</a></li>
+						<li><a href="intervention/create">New intervention</a></li>
 						<li><a href="speaker/logout">Logout</a></li>
 					<?php else: ?>
 						<li><a href="speaker/register">Register</a></li>

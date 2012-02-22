@@ -2,7 +2,7 @@
 define('PAGE_TITLE', 'My interventions');
 include(APP_DIR.'views/design/header.php');
 ?>
-<h1>My interventions</h1>
+<h1>Campus Interventions: <?php echo $campus->name; ?></h1>
 <table>
 	<tr>
 		<th style="width:25%">Subject</th>
@@ -34,8 +34,4 @@ include(APP_DIR.'views/design/header.php');
 		}
 	?>
 </table>
-
-<p>
-	<a href="intervention/create">Add an intervention.</a>
-</p>
 <?php include(APP_DIR.'views/design/footer.php'); ?>

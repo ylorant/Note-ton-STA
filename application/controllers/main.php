@@ -13,15 +13,24 @@ class Main extends Controller
 		$form->addAttribute('campus', 'onchange', 'this.form.submit();');
 		
 		$template = $this->loadView('index');
-		//~ $template->set('campusList', $);
 		$template->set('form', $form);
 		
-		if(isset($_SESSION['login']))
+		$template->render();
+	}
+	
+	public function campus()
+	{
+		if(!isset($_POST['campus']))
 		{
-			
+			header('Location: index');
+			exit();
 		}
 		
-		$template->render();
+		$campus = $this->loadModel('Campus');
+		if($campus->load($_POST['campus']))
+			header('Location: intervention/campus/'.$_POST['campus']);
+		else
+			header('Location: index');
 	}
 }
 

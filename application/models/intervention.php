@@ -84,4 +84,14 @@ class Intervention extends Model
 		return $return;
 	}
 	
+	public function create($subject, $speaker, $campus, $begin, $end, $status)
+	{
+		$begin = date('Y-m-d', strtotime($begin));
+		$end = date('Y-m-d', strtotime($end));
+		
+		trigger_error($begin.' '.$end);
+		$this->prepare('INSERT INTO interventions (subject, speaker, campus, start, end, status) VALUES(?, ?, ?, ?, ?, ?)');
+		$this->execute($subject, $speaker->id, $campus->id, $begin, $end, $status);
+		
+	}
 }
